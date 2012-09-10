@@ -7,6 +7,7 @@
 //
 
 #import "WBSDKTimelineViewController.h"
+#import "NSString+SBJSON.h"
 
 @interface WBSDKTimelineViewController (Private)
 
@@ -138,7 +139,24 @@
                            httpMethod:@"GET"
                                params:nil
                          postDataType:kWBRequestPostDataTypeNone
-                     httpHeaderFields:nil];
+                     httpHeaderFields:nil
+                        completeBlock:^{
+                            [indicatorView stopAnimating];
+                            NSString *resultString = [[[NSString alloc] initWithData:engine.request.responseData
+                                                                                            encoding:NSUTF8StringEncoding] autorelease];
+                            NSDictionary *result = [resultString JSONValue];
+                            NSLog(@"requestDidSucceedWithResult: %@", result);
+                            if ([result isKindOfClass:[NSDictionary class]])
+                            {
+                                NSDictionary *dict = (NSDictionary *)result;
+                                [timeLine addObjectsFromArray:[dict objectForKey:@"statuses"]];
+                                [timeLineTableView reloadData];
+                            }
+                            
+                        }
+                          failedBlock:^{
+                              [indicatorView stopAnimating];
+                          }];
 }
 
 #pragma mark - UITableViewDelegate Methods

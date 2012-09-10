@@ -15,11 +15,11 @@
 //#define kWBSDKDemoAppSecret
 
 #ifndef kWBSDKDemoAppKey
-#define kWBSDKDemoAppKey @"3694437764"
+#define kWBSDKDemoAppKey @"3952171305"
 #endif
 
 #ifndef kWBSDKDemoAppSecret
-#define kWBSDKDemoAppSecret @"ad431d824b653f71de4a0c2622a096c0"
+#define kWBSDKDemoAppSecret @"6f86a0d347e97c61e8062ca2ee00bec4"
 #endif
 
 #define kWBAlertViewLogOutTag 100
