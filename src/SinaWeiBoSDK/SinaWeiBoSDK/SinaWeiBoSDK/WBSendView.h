@@ -60,6 +60,8 @@
     NSString    *contentText;
     UIImage     *contentImage;
     
+    NSString *statusid;
+    
     UIInterfaceOrientation previousOrientation;
     
     BOOL        isKeyboardShowing;
@@ -71,6 +73,7 @@
 
 @property (nonatomic, retain) NSString *contentText;
 @property (nonatomic, retain) UIImage *contentImage;
+@property (nonatomic, retain) NSString *statusid;
 @property (nonatomic, assign) id<WBSendViewDelegate> delegate;
 
 - (id)initWithAppKey:(NSString *)appKey appSecret:(NSString *)appSecret text:(NSString *)text image:(UIImage *)image;

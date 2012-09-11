@@ -76,7 +76,7 @@ static BOOL WBIsDeviceIPad()
         [self setAutoresizingMask:UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight];
         
         // add the panel view
-        panelView = [[UIView alloc] initWithFrame:CGRectMake(16, 73, 288, 335)];
+        panelView = [[UIView alloc] initWithFrame:CGRectMake(16, 73, 288, 200)];
         panelImageView = [[UIImageView alloc] initWithFrame:CGRectMake(0, 0, 288, 335)];
         [panelImageView setImage:[[UIImage imageNamed:@"bg.png"] stretchableImageWithLeftCapWidth:18 topCapHeight:18]];
         
@@ -194,8 +194,7 @@ static BOOL WBIsDeviceIPad()
 }
 
 
-- (void)dealloc
-{
+- (void)dealloc {
     [engine setDelegate:nil];
     [engine release], engine = nil;
     
@@ -237,7 +236,15 @@ static BOOL WBIsDeviceIPad()
 		return;
 	}
     
-    [engine sendWeiBoWithText:contentTextView.text image:contentImage];
+    [engine commentWeiboWithText:contentTextView.text
+                        statusId:statusid
+                      alsoRepost:YES
+                   completeBlock:^{
+                       [delegate sendViewDidFinishSending:self];
+                   }
+                     failedBlock:^{
+                         [delegate sendView:self didFailWithError:engine.request.requestError];
+                     }];
 }
 
 - (void)onClearTextButtonTouched:(id)sender
@@ -252,6 +259,8 @@ static BOOL WBIsDeviceIPad()
     [clearImageButton setHidden:YES];
 	[contentImage release], contentImage = nil;
 }
+
+
 
 #pragma mark Orientations
 
@@ -494,8 +503,7 @@ static BOOL WBIsDeviceIPad()
 
 #pragma mark - WBSendView Public Methods
 
-- (void)show:(BOOL)animated
-{
+- (void)show:(BOOL)animated {
     [self sizeToFitOrientation:[self currentOrientation]];
     
     UIWindow *window = [UIApplication sharedApplication].keyWindow;
@@ -533,8 +541,7 @@ static BOOL WBIsDeviceIPad()
     
 }
 
-- (void)hide:(BOOL)animated
-{
+- (void)hide:(BOOL)animated {
     if ([delegate respondsToSelector:@selector(sendViewWillDisappear:)])
     {
         [delegate sendViewWillDisappear:self];
@@ -556,8 +563,7 @@ static BOOL WBIsDeviceIPad()
 
 #pragma mark - UIDeviceOrientationDidChangeNotification Methods
 
-- (void)deviceOrientationDidChange:(id)object
-{
+- (void)deviceOrientationDidChange:(id)object {
 	UIInterfaceOrientation orientation = [self currentOrientation];
 	if ([self shouldRotateToOrientation:orientation])
     {
@@ -573,8 +579,7 @@ static BOOL WBIsDeviceIPad()
 
 #pragma mark - UIKeyboardNotification Methods
 
-- (void)keyboardWillShow:(NSNotification*)notification
-{
+- (void)keyboardWillShow:(NSNotification*)notification {
     if (isKeyboardShowing)
     {
         return;
@@ -616,8 +621,7 @@ static BOOL WBIsDeviceIPad()
 	}
 }
 
-- (void)keyboardWillHide:(NSNotification*)notification
-{
+- (void)keyboardWillHide:(NSNotification*)notification {
 	isKeyboardShowing = NO;
 	
 	if (WBIsDeviceIPad())
@@ -654,33 +658,15 @@ static BOOL WBIsDeviceIPad()
 
 #pragma mark - UITextViewDelegate Methods
 
-- (void)textViewDidChange:(UITextView *)textView
-{
+- (void)textViewDidChange:(UITextView *)textView {
 	[self calculateTextLength];
 }
 
-- (BOOL)textView:(UITextView *)textView shouldChangeTextInRange:(NSRange)range replacementText:(NSString *)text
-{	
+- (BOOL)textView:(UITextView *)textView shouldChangeTextInRange:(NSRange)range replacementText:(NSString *)text {	
     return YES;
 }
 
 #pragma mark - WBEngineDelegate Methods
-
-- (void)engine:(WBEngine *)engine requestDidSucceedWithResult:(id)result
-{
-    if ([delegate respondsToSelector:@selector(sendViewDidFinishSending:)])
-    {
-        [delegate sendViewDidFinishSending:self];
-    }
-}
-
-- (void)engine:(WBEngine *)engine requestDidFailWithError:(NSError *)error
-{
-    if ([delegate respondsToSelector:@selector(sendView:didFailWithError:)])
-    {
-        [delegate sendView:self didFailWithError:error];
-    }
-}
 
 - (void)engineNotAuthorized:(WBEngine *)engine
 {

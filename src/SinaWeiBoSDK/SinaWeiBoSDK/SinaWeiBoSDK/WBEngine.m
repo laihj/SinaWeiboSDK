@@ -331,6 +331,21 @@
                         failedBlock:faildBlock];
 }
 
+- (void) commentWeiboWithText:(NSString *) text statusId:(NSString *) sid alsoRepost:(BOOL) repost completeBlock:(requestBlock) completeBlock failedBlock:(requestBlock) faildBlock {
+    //comments/create.json
+    
+    NSMutableDictionary *params = [NSMutableDictionary dictionaryWithCapacity:2];
+    [params setObject:(text ? text : @"") forKey:@"comment"];
+    [params setObject:sid forKey:@"id"];
+    [self loadRequestWithMethodName:@"comments/create.json"
+                         httpMethod:@"POST"
+                             params:params
+                       postDataType:kWBRequestPostDataTypeNormal
+                   httpHeaderFields:nil
+                      completeBlock:completeBlock
+                        failedBlock:faildBlock];
+}
+
 - (void) repostWeiboWithText:(NSString *) text statusId:(NSString *) sid completeBlock:(requestBlock) completeBlock failedBlock:(requestBlock) faildBlock {
     NSMutableDictionary *params = [NSMutableDictionary dictionaryWithCapacity:2];
     [params setObject:(text ? text : @"") forKey:@"status"];

@@ -131,6 +131,8 @@
 
 - (void) commentWeiboWithText:(NSString *) text statusId:(NSString *) sid completeBlock:(requestBlock) completeBlock failedBlock:(requestBlock) faildBlock;
 
+- (void) commentWeiboWithText:(NSString *) text statusId:(NSString *) sid alsoRepost:(BOOL) repost completeBlock:(requestBlock) completeBlock failedBlock:(requestBlock) faildBlock;
+
 - (void) repostWeiboWithText:(NSString *) text statusId:(NSString *) sid completeBlock:(requestBlock) completeBlock failedBlock:(requestBlock) faildBlock;
 
 - (void) getCommentWithStatusId:(NSString *) StatusId completeBlock:(requestBlock) completeBlock failedBlock:(requestBlock) faildBlock;
