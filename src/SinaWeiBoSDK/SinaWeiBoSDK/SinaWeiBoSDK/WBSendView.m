@@ -58,8 +58,6 @@ static BOOL WBIsDeviceIPad()
 
 @implementation WBSendView
 
-@synthesize contentText;
-@synthesize contentImage;
 @synthesize delegate;
 
 #pragma mark - WBSendView Life Circle
@@ -77,10 +75,7 @@ static BOOL WBIsDeviceIPad()
         
         // add the panel view
         panelView = [[UIView alloc] initWithFrame:CGRectMake(16, 73, 288, 200)];
-        panelImageView = [[UIImageView alloc] initWithFrame:CGRectMake(0, 0, 288, 335)];
-        [panelImageView setImage:[[UIImage imageNamed:@"bg.png"] stretchableImageWithLeftCapWidth:18 topCapHeight:18]];
-        
-        [panelView addSubview:panelImageView];
+        panelView.backgroundColor = [UIColor blueColor];
         [self addSubview:panelView];
         
         // add the buttons & labels
@@ -119,8 +114,9 @@ static BOOL WBIsDeviceIPad()
 		[contentTextView setEditable:YES];
 		[contentTextView setDelegate:self];
         [contentTextView setText:text];
-		[contentTextView setBackgroundColor:[UIColor clearColor]];
+        contentTextView.backgroundColor = [UIColor blackColor];
 		[contentTextView setFont:[UIFont systemFontOfSize:16]];
+        contentTextView.textColor = [UIColor whiteColor];
  		[panelView addSubview:contentTextView];
         
         wordCountLabel = [[UILabel alloc] initWithFrame:CGRectMake(210, 190, 30, 30)];
@@ -141,54 +137,6 @@ static BOOL WBIsDeviceIPad()
         // calculate the text length
         [self calculateTextLength];
         
-        self.contentText = contentTextView.text;
-        
-        // image(if attachted)
-        if (image)
-        {
-			CGSize imageSize = image.size;	
-            CGFloat width = imageSize.width;
-			CGFloat height = imageSize.height;
-			CGRect tframe = CGRectMake(0, 0, 0, 0);
-			if (width > height) {
-				tframe.size.width = 120;
-				tframe.size.height = height * (120 / width);
-			}
-			else {
-				tframe.size.height = 80;
-				tframe.size.width = width * (80 / height);
-			}
-			
-			contentImageView = [[UIImageView alloc] initWithFrame:tframe];
-			[contentImageView setImage:image];
-			[contentImageView setCenter:CGPointMake(144, 260)];
-			
-			CALayer *layer = [contentImageView layer];
-			[layer setBorderColor:[[UIColor whiteColor] CGColor]];
-			[layer setBorderWidth:5.0f];
-			
-			[contentImageView.layer setShadowColor:[UIColor blackColor].CGColor];
-            [contentImageView.layer setShadowOffset:CGSizeMake(0, 0)];
-            [contentImageView.layer setShadowOpacity:0.5]; 
-            [contentImageView.layer setShadowRadius:3.0];
-			
-			
-			[panelView addSubview:contentImageView];
- 			
-			clearImageButton = [UIButton buttonWithType:UIButtonTypeCustom];
-			[clearImageButton setShowsTouchWhenHighlighted:YES];
-			[clearImageButton setFrame:CGRectMake(0, 0, 30, 30)];
-			[clearImageButton setContentMode:UIViewContentModeCenter];
-			[clearImageButton setImage:[UIImage imageNamed:@"close.png"] forState:UIControlStateNormal];
-			[clearImageButton addTarget:self action:@selector(onClearImageButtonTouched:) forControlEvents:UIControlEventTouchUpInside];
-			[clearImageButton setCenter:CGPointMake(contentImageView.center.x + contentImageView.frame.size.width / 2,
-                                                    contentImageView.center.y - contentImageView.frame.size.height / 2)];
-            [panelView addSubview:clearImageButton];
-            
-            
-            self.contentImage = image;
-        }
-        
     }
     return self;
 }
@@ -203,12 +151,7 @@ static BOOL WBIsDeviceIPad()
     [titleLabel release], titleLabel = nil;
     [contentTextView release], contentTextView = nil;
     [wordCountLabel release], wordCountLabel = nil;
-    [contentImageView release], contentImageView = nil;
-    
-    
-    [contentText release], contentText = nil;
-    [contentImage release], contentImage = nil;
-    
+
     delegate = nil;
     
     [super dealloc];
@@ -237,7 +180,7 @@ static BOOL WBIsDeviceIPad()
 	}
     
     [engine commentWeiboWithText:contentTextView.text
-                        statusId:statusid
+                        statusId:_statusid
                       alsoRepost:YES
                    completeBlock:^{
                        [delegate sendViewDidFinishSending:self];
@@ -255,9 +198,6 @@ static BOOL WBIsDeviceIPad()
 
 - (void)onClearImageButtonTouched:(id)sender
 {
-    [contentImageView setHidden:YES];
-    [clearImageButton setHidden:YES];
-	[contentImage release], contentImage = nil;
 }
 
 
@@ -281,15 +221,12 @@ static BOOL WBIsDeviceIPad()
     if (UIInterfaceOrientationIsLandscape(orientation))
     {
         [self setFrame:CGRectMake(0, 0, 480, 320)];
-        [panelView setFrame:CGRectMake(16, 10, 480 - 32, 280)];
+        [panelView setFrame:CGRectMake(16, 10, 480 - 32, 210)];
         [contentTextView setFrame:CGRectMake(13, 50, 480 - 32 - 26, 60 + 50)];
-        [contentImageView setCenter:CGPointMake(448 / 2, 155 + 60)];
-        [clearImageButton setCenter:CGPointMake(contentImageView.center.x + contentImageView.frame.size.width / 2,
-                                                contentImageView.center.y - contentImageView.frame.size.height / 2)];
     
         [wordCountLabel setFrame:CGRectMake(224 + 90, 100 + 60, 30, 30)];
         [clearTextButton setFrame:CGRectMake(224 + 120, 101 + 60, 30, 30)];
-        [panelImageView setFrame:CGRectMake(0, 0, 480 - 32, 280)];
+        [panelImageView setFrame:CGRectMake(0, 0, 480 - 32, 210)];
         [panelImageView setImage:[UIImage imageNamed:@"bg_land.png"]];
         [sendButton setFrame:CGRectMake(480- 32 - 15 - 48, 13, 48, 30)];
         [titleLabel setCenter:CGPointMake(448 / 2, 27)];
@@ -297,10 +234,6 @@ static BOOL WBIsDeviceIPad()
         if (isKeyboardShowing)
         {
             [contentTextView setFrame:CGRectMake(13, 50, 480 - 32 - 26, 60)];
-            
-            [contentImageView setCenter:CGPointMake(448 / 2, 155)];
-            [clearImageButton setCenter:CGPointMake(contentImageView.center.x + contentImageView.frame.size.width / 2,
-                                                    contentImageView.center.y - contentImageView.frame.size.height / 2)];
             
             [wordCountLabel setFrame:CGRectMake(224 + 90, 100, 30, 30)];
             [clearTextButton setFrame:CGRectMake(224 + 120, 101, 30, 30)];
@@ -314,17 +247,14 @@ static BOOL WBIsDeviceIPad()
         
         if(isKeyboardShowing)
         {
-            [panelView setFrame:CGRectMake(16, 73 - 10 - 51, 288, 335)];
+            [panelView setFrame:CGRectMake(16, 73 - 10 - 51, 288, 210)];
         }
         
         [contentTextView setFrame:CGRectMake(13, 60, 288 - 26, 150)];
-        [contentImageView setCenter:CGPointMake(144, 260)];
-        [clearImageButton setCenter:CGPointMake(contentImageView.center.x + contentImageView.frame.size.width / 2,
-                                                contentImageView.center.y - contentImageView.frame.size.height / 2)];
         
         [wordCountLabel setFrame:CGRectMake(210, 190, 30, 30)];
         [clearTextButton setFrame:CGRectMake(240, 191, 30, 30)];
-        [panelImageView setFrame:CGRectMake(0, 0, 288, 335)];
+        [panelImageView setFrame:CGRectMake(0, 0, 288, 210)];
         [panelImageView setImage:[UIImage imageNamed:@"bg.png"]];
         
         [sendButton setFrame:CGRectMake(288 - 15 - 48, 13, 48, 30)];
@@ -600,9 +530,6 @@ static BOOL WBIsDeviceIPad()
 		[UIView setAnimationDuration:0.3];
  		
         [contentTextView setFrame:CGRectMake(13, 50, 480 - 32 - 26, 60)];
-        [contentImageView setCenter:CGPointMake(448 / 2, 155)];
-        [clearImageButton setCenter:CGPointMake(contentImageView.center.x + contentImageView.frame.size.width / 2,
-                                                contentImageView.center.y - contentImageView.frame.size.height / 2)];
 
 		[wordCountLabel setFrame:CGRectMake(224 + 90, 100, 30, 30)];
 		[clearTextButton setFrame:CGRectMake(224 + 120, 101, 30, 30)];
@@ -635,9 +562,6 @@ static BOOL WBIsDeviceIPad()
 		[UIView setAnimationDuration:0.3];
  		
         [contentTextView setFrame:CGRectMake(13, 50, 480 - 32 - 26, 60 + 50)];
-        [contentImageView setCenter:CGPointMake(448 / 2, 155 + 60)];
-        [clearImageButton setCenter:CGPointMake(contentImageView.center.x + contentImageView.frame.size.width / 2,
-                                                contentImageView.center.y - contentImageView.frame.size.height / 2)];
         
 		[wordCountLabel setFrame:CGRectMake(224 + 90, 100 + 60, 30, 30)];
 		[clearTextButton setFrame:CGRectMake(224 + 120, 101 + 60, 30, 30)];

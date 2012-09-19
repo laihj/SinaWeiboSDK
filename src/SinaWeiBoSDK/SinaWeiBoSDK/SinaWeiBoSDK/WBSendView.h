@@ -44,21 +44,16 @@
 {
     
     UITextView  *contentTextView;
-    UIImageView *contentImageView;
     
     UIButton    *sendButton;
     UIButton    *closeButton;
     UIButton    *clearTextButton;
-    UIButton    *clearImageButton;
     
     UILabel     *titleLabel;
     UILabel     *wordCountLabel;
     
     UIView      *panelView;
     UIImageView *panelImageView;
-    
-    NSString    *contentText;
-    UIImage     *contentImage;
     
     NSString *statusid;
     
@@ -71,8 +66,6 @@
     id<WBSendViewDelegate> delegate;
 }
 
-@property (nonatomic, retain) NSString *contentText;
-@property (nonatomic, retain) UIImage *contentImage;
 @property (nonatomic, retain) NSString *statusid;
 @property (nonatomic, assign) id<WBSendViewDelegate> delegate;
 
