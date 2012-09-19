@@ -334,9 +334,14 @@
 - (void) commentWeiboWithText:(NSString *) text statusId:(NSString *) sid alsoRepost:(BOOL) repost completeBlock:(requestBlock) completeBlock failedBlock:(requestBlock) faildBlock {
     //comments/create.json
     
-    NSMutableDictionary *params = [NSMutableDictionary dictionaryWithCapacity:2];
+    NSMutableDictionary *params = [NSMutableDictionary dictionaryWithCapacity:3];
     [params setObject:(text ? text : @"") forKey:@"comment"];
     [params setObject:sid forKey:@"id"];
+    if (repost) {
+        [params setObject:@1 forKey:@"comment_ori"];
+    } else {
+        [params setObject:@0 forKey:@"comment_ori"];
+    }
     [self loadRequestWithMethodName:@"comments/create.json"
                          httpMethod:@"POST"
                              params:params
