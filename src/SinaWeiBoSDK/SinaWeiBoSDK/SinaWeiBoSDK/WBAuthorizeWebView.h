@@ -39,6 +39,7 @@
 
 @property (nonatomic, assign) id<WBAuthorizeWebViewDelegate> delegate;
 
+
 - (void)loadRequestWithURL:(NSURL *)url;
 
 - (void)show:(BOOL)animated;

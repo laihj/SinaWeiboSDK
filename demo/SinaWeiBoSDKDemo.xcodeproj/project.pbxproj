@@ -15,6 +15,7 @@
 		2899E5220DE3E06400AC0155 /* SinaWeiBoSDKDemoViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 2899E5210DE3E06400AC0155 /* SinaWeiBoSDKDemoViewController.xib */; };
 		28AD733F0D9D9553002E5188 /* MainWindow.xib in Resources */ = {isa = PBXBuildFile; fileRef = 28AD733E0D9D9553002E5188 /* MainWindow.xib */; };
 		28D7ACF80DDB3853001CB0EB /* SinaWeiBoSDKDemoViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 28D7ACF70DDB3853001CB0EB /* SinaWeiBoSDKDemoViewController.m */; };
+		38F4523D1648F2E4009A1E14 /* MBProgressHUD.m in Sources */ = {isa = PBXBuildFile; fileRef = 38F4523C1648F2E4009A1E14 /* MBProgressHUD.m */; };
 		C3BC870B13977BAD0039EB12 /* Security.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C3BC870A13977BAD0039EB12 /* Security.framework */; };
 		E649E252149995B200AC6590 /* Localizable.strings in Resources */ = {isa = PBXBuildFile; fileRef = E649E250149995B200AC6590 /* Localizable.strings */; };
 		E649E256149995ED00AC6590 /* Localizable.strings in Resources */ = {isa = PBXBuildFile; fileRef = E649E250149995B200AC6590 /* Localizable.strings */; };
@@ -64,6 +65,8 @@
 		28D7ACF70DDB3853001CB0EB /* SinaWeiBoSDKDemoViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SinaWeiBoSDKDemoViewController.m; sourceTree = "<group>"; };
 		29B97316FDCFA39411CA2CEA /* main.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = main.m; sourceTree = "<group>"; };
 		32CA4F630368D1EE00C91783 /* SinaWeiBoSDKDemo_Prefix.pch */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SinaWeiBoSDKDemo_Prefix.pch; sourceTree = "<group>"; };
+		38F4523B1648F2E4009A1E14 /* MBProgressHUD.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MBProgressHUD.h; sourceTree = "<group>"; };
+		38F4523C1648F2E4009A1E14 /* MBProgressHUD.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MBProgressHUD.m; sourceTree = "<group>"; };
 		8D1107310486CEB800E47090 /* SinaWeiBoSDKDemo-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = "SinaWeiBoSDKDemo-Info.plist"; plistStructureDefinitionIdentifier = "com.apple.xcode.plist.structure-definition.iphone.info-plist"; sourceTree = "<group>"; };
 		C3BC870A13977BAD0039EB12 /* Security.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Security.framework; path = System/Library/Frameworks/Security.framework; sourceTree = SDKROOT; };
 		E649E251149995B200AC6590 /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/Localizable.strings; sourceTree = "<group>"; };
@@ -159,6 +162,8 @@
 		29B97314FDCFA39411CA2CEA /* CustomTemplate */ = {
 			isa = PBXGroup;
 			children = (
+				38F4523B1648F2E4009A1E14 /* MBProgressHUD.h */,
+				38F4523C1648F2E4009A1E14 /* MBProgressHUD.m */,
 				E6ABCCE3149889B0008E0A37 /* SinaWeiBoSDK */,
 				080E96DDFE201D6D7F000001 /* Classes */,
 				29B97315FDCFA39411CA2CEA /* Other Sources */,
@@ -438,6 +443,7 @@
 				E6ABCD2B149889B0008E0A37 /* WBSendView.m in Sources */,
 				E6ABCD2C149889B0008E0A37 /* WBUtil.m in Sources */,
 				E649E25B14999F3A00AC6590 /* WBSDKTimelineViewController.m in Sources */,
+				38F4523D1648F2E4009A1E14 /* MBProgressHUD.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

@@ -15,11 +15,11 @@
 //#define kWBSDKDemoAppSecret
 
 #ifndef kWBSDKDemoAppKey
-#define kWBSDKDemoAppKey @""
+#define kWBSDKDemoAppKey @"3694437764"
 #endif
 
 #ifndef kWBSDKDemoAppSecret
-#define kWBSDKDemoAppSecret @""
+#define kWBSDKDemoAppSecret @"ad431d824b653f71de4a0c2622a096c0"
 #endif
 
 #define kWBAlertViewLogOutTag 100
@@ -66,7 +66,7 @@
     WBEngine *engine = [[WBEngine alloc] initWithAppKey:kWBSDKDemoAppKey appSecret:kWBSDKDemoAppSecret];
     [engine setRootViewController:self];
     [engine setDelegate:self];
-    [engine setRedirectURI:@"http://"];
+    [engine setRedirectURI:@"http://1.interserver.sinaapp.com/callback.php"];
     [engine setIsUserExclusive:NO];
     self.weiBoEngine = engine;
     [engine release];

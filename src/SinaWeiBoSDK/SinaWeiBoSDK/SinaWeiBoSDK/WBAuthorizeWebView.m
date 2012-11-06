@@ -107,7 +107,7 @@
     if (UIInterfaceOrientationIsLandscape(orientation))
     {
         [self setFrame:CGRectMake(0, 0, 480, 320)];
-        [panelView setFrame:CGRectMake(10, 30, 460, 280)];
+        [panelView setFrame:CGRectMake(10, 30, SCREEN_HEIGHT, 280)];
         [containerView setFrame:CGRectMake(10, 10, 440, 260)];
         [webView setFrame:CGRectMake(0, 0, 440, 260)];
         [indicatorView setCenter:CGPointMake(240, 160)];

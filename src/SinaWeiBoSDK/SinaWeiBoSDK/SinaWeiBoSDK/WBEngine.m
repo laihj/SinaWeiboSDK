@@ -392,6 +392,50 @@
 //    }
 }
 
+- (void) addStatusToFavoritesWithStatusId:(NSString *) StatusId
+                                   andTag:(NSString *) tag
+                            completeBlock:(requestBlock) completeBlock
+                              failedBlock:(requestBlock) faildBlock {
+    NSMutableDictionary *params = [NSMutableDictionary dictionaryWithCapacity:1];
+    [params setObject:[NSString stringWithFormat:@"%@",StatusId] forKey:@"id"];
+    requestBlock cBlock = completeBlock;
+    if(tag) {
+        cBlock = ^{
+            [self updateStatusFavoritesTag:StatusId
+                                    andTag:tag
+                             completeBlock:completeBlock
+                               failedBlock:faildBlock];
+        };
+    }
+    
+    [self loadRequestWithMethodName:@"favorites/create.json"
+                         httpMethod:@"POST"
+                             params:params
+                       postDataType:kWBRequestPostDataTypeNormal
+                   httpHeaderFields:nil
+                      completeBlock:cBlock
+                        failedBlock:faildBlock];
+}
+
+- (void) updateStatusFavoritesTag:(NSString *) StatusId
+                           andTag:(NSString *) tag
+                    completeBlock:(requestBlock) completeBlock
+                      failedBlock:(requestBlock) faildBlock {
+    NSMutableDictionary *params = [NSMutableDictionary dictionaryWithCapacity:2];
+    [params setObject:[NSString stringWithFormat:@"%@",StatusId] forKey:@"id"];
+    [params setObject:tag forKey:@"tags"];
+    requestBlock cBlock = completeBlock;
+    
+    [self loadRequestWithMethodName:@"favorites/tags/update.json"
+                         httpMethod:@"POST"
+                             params:params
+                       postDataType:kWBRequestPostDataTypeNormal
+                   httpHeaderFields:nil
+                      completeBlock:cBlock
+                        failedBlock:faildBlock];
+    
+}
+
 #pragma mark - WBAuthorizeDelegate Methods
 
 - (void)authorize:(WBAuthorize *)authorize didSucceedWithAccessToken:(NSString *)theAccessToken userID:(NSString *)theUserID expiresIn:(NSInteger)seconds

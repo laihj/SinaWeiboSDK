@@ -16,6 +16,7 @@
 //
 
 #import "WBSendView.h"
+#import "MBProgressHUD.h"
 
 static BOOL WBIsDeviceIPad()
 {
@@ -59,6 +60,7 @@ static BOOL WBIsDeviceIPad()
 @implementation WBSendView
 
 @synthesize delegate;
+@synthesize titleLabel;
 
 #pragma mark - WBSendView Life Circle
 
@@ -76,6 +78,8 @@ static BOOL WBIsDeviceIPad()
         // add the panel view
         panelView = [[UIView alloc] initWithFrame:CGRectMake(16, 73, 288, 200)];
         panelView.backgroundColor = [UIColor blueColor];
+        panelView.layer.cornerRadius = 6;
+        panelView.layer.masksToBounds = YES;
         [self addSubview:panelView];
         
         // add the buttons & labels
@@ -84,19 +88,20 @@ static BOOL WBIsDeviceIPad()
 		[closeButton setFrame:CGRectMake(15, 13, 48, 30)];
 		[closeButton setTitleColor:[UIColor whiteColor] forState:UIControlStateNormal];
 		[closeButton setBackgroundImage:[UIImage imageNamed:@"btn.png"] forState:UIControlStateNormal];
-		[closeButton setTitle:NSLocalizedString(@"关闭", nil) forState:UIControlStateNormal];
+		[closeButton setTitle:NSLocalizedString(@"取消", nil) forState:UIControlStateNormal];
 		[closeButton.titleLabel setFont:[UIFont boldSystemFontOfSize:13.0f]];
 		[closeButton addTarget:self action:@selector(onCloseButtonTouched:) forControlEvents:UIControlEventTouchUpInside];
 		[panelView addSubview:closeButton];
         
         titleLabel = [[UILabel alloc] initWithFrame:CGRectMake(200, 12, 140, 30)];
-        [titleLabel setText:NSLocalizedString(@"新浪微博", nil)];
+        [titleLabel setText:NSLocalizedString(@"分享", nil)];
         [titleLabel setTextColor:[UIColor blackColor]];
         [titleLabel setBackgroundColor:[UIColor clearColor]];
+        titleLabel.textColor = [UIColor whiteColor];
         [titleLabel setTextAlignment:UITextAlignmentCenter];
         [titleLabel setCenter:CGPointMake(144, 27)];
         [titleLabel setShadowOffset:CGSizeMake(0, 1)];
-		[titleLabel setShadowColor:[UIColor whiteColor]];
+		[titleLabel setShadowColor:[UIColor grayColor]];
         [titleLabel setFont:[UIFont systemFontOfSize:19]];
 		[panelView addSubview:titleLabel];
         
@@ -110,14 +115,30 @@ static BOOL WBIsDeviceIPad()
 		[sendButton addTarget:self action:@selector(onSendButtonTouched:) forControlEvents:UIControlEventTouchUpInside];
 		[panelView addSubview:sendButton];
         
-        contentTextView = [[UITextView alloc] initWithFrame:CGRectMake(13, 60, 288 - 26, 150)];
-		[contentTextView setEditable:YES];
+        contentTextView = [[UITextView alloc] initWithFrame:CGRectMake(13, 60, 288 - 26, 200)];
 		[contentTextView setDelegate:self];
         [contentTextView setText:text];
+        contentTextView.layer.cornerRadius = 6;
+        contentTextView.layer.masksToBounds = YES;
         contentTextView.backgroundColor = [UIColor blackColor];
 		[contentTextView setFont:[UIFont systemFontOfSize:16]];
         contentTextView.textColor = [UIColor whiteColor];
  		[panelView addSubview:contentTextView];
+        
+        
+        _alosreportBtn = [UIButton buttonWithType:UIButtonTypeCustom];
+        _alosreportBtn.tag = 1;
+        [_alosreportBtn setImage:[UIImage imageNamed:@"cb_dark_off.png"] forState:UIControlStateNormal];
+        [_alosreportBtn addTarget:self action:@selector(alsoReportWeibo:) forControlEvents:UIControlEventTouchUpInside];
+        [panelView addSubview:_alosreportBtn];
+        
+        _alosreport = [[UILabel alloc] initWithFrame:CGRectMake(210, 100, 30, 30)];
+		[_alosreport setBackgroundColor:[UIColor clearColor]];
+		[_alosreport setTextColor:[UIColor darkGrayColor]];
+		[_alosreport setFont:[UIFont systemFontOfSize:16]];
+        _alosreport.text = @"同时转到发微博";
+		[_alosreport setTextAlignment:UITextAlignmentCenter];
+		[panelView addSubview:_alosreport];
         
         wordCountLabel = [[UILabel alloc] initWithFrame:CGRectMake(210, 190, 30, 30)];
 		[wordCountLabel setBackgroundColor:[UIColor clearColor]];
@@ -141,8 +162,20 @@ static BOOL WBIsDeviceIPad()
     return self;
 }
 
+- (void) alsoReportWeibo:(id) sender {
+    UIButton *btn = (UIButton *) sender;
+    if (btn.tag == 1) {
+        _alosreportBtn.tag = 2;
+        [_alosreportBtn setImage:[UIImage imageNamed:@"cb_dark_on.png"] forState:UIControlStateNormal];
+    } else {
+        _alosreportBtn.tag = 1;
+        [_alosreportBtn setImage:[UIImage imageNamed:@"cb_dark_off.png"] forState:UIControlStateNormal];
+    }
+}
+
 
 - (void)dealloc {
+    [_alosreport release];
     [engine setDelegate:nil];
     [engine release], engine = nil;
     
@@ -170,7 +203,7 @@ static BOOL WBIsDeviceIPad()
 {
     if ([contentTextView.text isEqualToString:@""])
     {
-		UIAlertView * alertView = [[UIAlertView alloc] initWithTitle:NSLocalizedString(@"新浪微博", nil)
+		UIAlertView * alertView = [[UIAlertView alloc] initWithTitle:NSLocalizedString(@"提示", nil)
                                                              message:NSLocalizedString(@"请输入微博内容", nil)
                                                             delegate:nil
                                                    cancelButtonTitle:NSLocalizedString(@"确定", nil) otherButtonTitles:nil];
@@ -178,22 +211,59 @@ static BOOL WBIsDeviceIPad()
 		[alertView release];
 		return;
 	}
+    if (!_hud) {
+        self.hud = [[MBProgressHUD alloc] initWithView:panelView];
+        [panelView addSubview:_hud];
+        _hud.labelText = @"正在发送...";
+        [_hud show:YES];
+        //[hub hide:YES afterDelay:1];
+        [_hud release];
+    }
+    if ([titleLabel.text isEqualToString:@"评论"]) {
+        [engine commentWeiboWithText:contentTextView.text
+                            statusId:_statusid
+                          alsoRepost:YES
+                       completeBlock:^{
+                           //[delegate sendViewDidFinishSending:self];
+                           if (_alosreportBtn.tag == 2) {
+                               [engine repostWeiboWithText:contentTextView.text
+                                                  statusId:_statusid
+                                             completeBlock:^{
+                                                 [delegate sendViewDidFinishSending:self];
+                                             }
+                                               failedBlock:^{
+                                                   [delegate sendView:self didFailWithError:engine.request.requestError];
+                                               }];
+                               
+                           } else {
+                               [delegate sendViewDidFinishSending:self];
+                           }
+                           [_hud hide:NO];
+                       }
+                         failedBlock:^{
+                             [_hud hide:NO];
+                             [delegate sendView:self didFailWithError:engine.request.requestError];
+                         }];
+        
+    } else {
+        [engine sendWeiBoWithText:contentTextView.text
+                            image:nil
+                    completeBlock:^{
+                        [delegate sendViewDidFinishSending:self];
+                        [_hud hide:NO];
+                    }
+                      failedBlock:^{
+                        [delegate sendView:self didFailWithError:engine.request.requestError];
+                          [_hud hide:NO];
+                      }];
+    }
     
-    [engine commentWeiboWithText:contentTextView.text
-                        statusId:_statusid
-                      alsoRepost:YES
-                   completeBlock:^{
-                       [delegate sendViewDidFinishSending:self];
-                   }
-                     failedBlock:^{
-                         [delegate sendView:self didFailWithError:engine.request.requestError];
-                     }];
 }
 
 - (void)onClearTextButtonTouched:(id)sender
 {
    [contentTextView setText:@""];
-	[self calculateTextLength];
+   [self calculateTextLength];
 }
 
 - (void)onClearImageButtonTouched:(id)sender
@@ -237,23 +307,24 @@ static BOOL WBIsDeviceIPad()
             
             [wordCountLabel setFrame:CGRectMake(224 + 90, 100, 30, 30)];
             [clearTextButton setFrame:CGRectMake(224 + 120, 101, 30, 30)];
+            _alosreportBtn.frame = CGRectMake(65, 100, 30, 30);
+            _alosreport.frame = CGRectMake(100, 100, 100, 30);
         }
     
     }
     else
     {
         [self setFrame:CGRectMake(0, 0, 320, 480)];
-        [panelView setFrame:CGRectMake(16, 73 - 10, 288, 335)];
+        [panelView setFrame:CGRectMake(16, SCREEN_HEIGHT -  425, 288, 210)];
         
-        if(isKeyboardShowing)
-        {
-            [panelView setFrame:CGRectMake(16, 73 - 10 - 51, 288, 210)];
-        }
         
-        [contentTextView setFrame:CGRectMake(13, 60, 288 - 26, 150)];
+        [contentTextView setFrame:CGRectMake(13, 50, 288 - 26, 150)];
         
-        [wordCountLabel setFrame:CGRectMake(210, 190, 30, 30)];
-        [clearTextButton setFrame:CGRectMake(240, 191, 30, 30)];
+        [wordCountLabel setFrame:CGRectMake(210, 160, 30, 30)];
+        [clearTextButton setFrame:CGRectMake(240, 160, 30, 30)];
+        _alosreportBtn.frame = CGRectMake(23, 160, 30, 30);
+        _alosreport.frame = CGRectMake(50, 160, 130, 30);
+        
         [panelImageView setFrame:CGRectMake(0, 0, 288, 210)];
         [panelImageView setImage:[UIImage imageNamed:@"bg.png"]];
         
@@ -468,6 +539,14 @@ static BOOL WBIsDeviceIPad()
     }
 	
 	[self addObservers];
+    [contentTextView becomeFirstResponder];
+    if ([titleLabel.text isEqualToString:@"评论"]) {
+        _alosreportBtn.hidden = NO;
+        _alosreport.hidden = NO;
+    } else {
+        _alosreportBtn.hidden = YES;
+        _alosreport.hidden = YES;
+    }
     
 }
 
@@ -510,6 +589,7 @@ static BOOL WBIsDeviceIPad()
 #pragma mark - UIKeyboardNotification Methods
 
 - (void)keyboardWillShow:(NSNotification*)notification {
+    return;
     if (isKeyboardShowing)
     {
         return;
@@ -528,11 +608,7 @@ static BOOL WBIsDeviceIPad()
         
  		[UIView beginAnimations:nil context:nil];
 		[UIView setAnimationDuration:0.3];
- 		
-        [contentTextView setFrame:CGRectMake(13, 50, 480 - 32 - 26, 60)];
 
-		[wordCountLabel setFrame:CGRectMake(224 + 90, 100, 30, 30)];
-		[clearTextButton setFrame:CGRectMake(224 + 120, 101, 30, 30)];
         
  		[UIView commitAnimations];
 	}
@@ -549,6 +625,7 @@ static BOOL WBIsDeviceIPad()
 }
 
 - (void)keyboardWillHide:(NSNotification*)notification {
+    return;
 	isKeyboardShowing = NO;
 	
 	if (WBIsDeviceIPad())

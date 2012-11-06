@@ -21,6 +21,7 @@
 #import "WBEngine.h"
 
 @class WBSendView;
+@class MBProgressHUD;
 
 @protocol WBSendViewDelegate <NSObject>
 
@@ -68,10 +69,15 @@
 
 @property (nonatomic, retain) NSString *statusid;
 @property (nonatomic, assign) id<WBSendViewDelegate> delegate;
+@property (nonatomic, retain) UILabel *titleLabel;
+@property (nonatomic, retain) UILabel *alosreport;
+@property (nonatomic, retain) UIButton *alosreportBtn;
+@property (nonatomic, retain) MBProgressHUD *hud;
 
 - (id)initWithAppKey:(NSString *)appKey appSecret:(NSString *)appSecret text:(NSString *)text image:(UIImage *)image;
 
 - (void)show:(BOOL)animated;
 - (void)hide:(BOOL)animated;
+- (void) alsoReportWeibo:(id) sender;
 
 @end

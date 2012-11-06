@@ -137,4 +137,8 @@
 
 - (void) getCommentWithStatusId:(NSString *) StatusId completeBlock:(requestBlock) completeBlock failedBlock:(requestBlock) faildBlock;
 
+- (void) addStatusToFavoritesWithStatusId:(NSString *) StatusId andTag:(NSString *) tag completeBlock:(requestBlock) completeBlock failedBlock:(requestBlock) faildBlock;
+
+- (void) updateStatusFavoritesTag:(NSString *) StatusId andTag:(NSString *) tag completeBlock:(requestBlock) completeBlock failedBlock:(requestBlock) faildBlock;
+
 @end
