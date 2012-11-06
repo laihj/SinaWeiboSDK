@@ -2,6 +2,19 @@
 
 基于新浪微博官方SDK，官方版OAuth2.0 SDK基本上是个DEMO，没什么功能，且不易扩展。
 
+### 调用示例
+
+    WBEngine *engine = [app sharedWBEngineWithDelegate:selfrootView:self];
+    [engine getCommentWithStatusId:@"11111111111"
+                     completeBlock:^{  
+                     	//返回的数据
+                         NSData *re = engine.request.responseData;
+                     }
+                       failedBlock:^{
+                           //返回的出错信息 NSError
+                           NSError *error = engine.request.requestError
+                       }];
+
 ### 已完成接口 ###
 
 	//发微博
