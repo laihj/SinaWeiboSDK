@@ -77,3 +77,13 @@
 	          Count:(NSInteger) count
 	  completeBlock:(requestBlock) completeBlock
 	    failedBlock:(requestBlock) faildBlock;
+
+
+=========
+	- (void)loadRequestWithMethodName:(NSString *)methodName
+	                       httpMethod:(NSString *)httpMethod
+	                           params:(NSDictionary *)params
+	                     postDataType:(WBRequestPostDataType)postDataType
+	                 httpHeaderFields:(NSDictionary *)httpHeaderFields
+	                    completeBlock:(requestBlock) completeBlock
+	                      failedBlock:(requestBlock) faildBlock
