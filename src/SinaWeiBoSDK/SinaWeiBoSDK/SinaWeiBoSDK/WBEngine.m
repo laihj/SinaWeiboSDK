@@ -19,6 +19,7 @@
 #import "SFHFKeychainUtils.h"
 #import "WBSDKGlobal.h"
 #import "WBUtil.h"
+#import "NSString+SBJSON.h"
 
 #define kWBURLSchemePrefix              @"WB_"
 
@@ -434,6 +435,69 @@
                       completeBlock:cBlock
                         failedBlock:faildBlock];
     
+}
+
+- (void) getFavoriteStatusPage:(NSInteger) page
+                         Count:(NSInteger) count
+                 completeBlock:(requestBlock) completeBlock
+                   failedBlock:(requestBlock) faildBlock {
+    NSMutableDictionary *params = [NSMutableDictionary dictionaryWithCapacity:2];
+    [params setObject:@(page) forKey:@"page"];
+    [params setObject:@(count) forKey:@"count"];
+    
+    [self loadRequestWithMethodName:@"favorites.json"
+                         httpMethod:@"GET"
+                             params:params
+                       postDataType:kWBRequestPostDataTypeNormal
+                   httpHeaderFields:nil
+                      completeBlock:completeBlock
+                        failedBlock:faildBlock];
+}
+
+- (void) getFavoriteStatusWithTag:(NSString *) tag Page:(NSInteger) page Count:(NSInteger) count completeBlock:(requestBlock) completeBlock failedBlock:(requestBlock) faildBlock {
+    [self getTag:tag Page:0 Count:20
+      completeBlock:^{
+          NSString* logString = [[[NSString alloc] initWithData:self.request.responseData
+                                                       encoding:NSUTF8StringEncoding] autorelease];
+          NSString *tagId = nil;
+          NSDictionary *result = [logString JSONValue];
+          NSArray *tagArray = [result objectForKey:@"tags"];
+          for (NSDictionary *dict in tagArray) {
+              if ([tag isEqualToString:[dict objectForKey:@"tag"]]) {
+                  tagId = [dict objectForKey:@"id"];
+                  break;
+              }
+          }
+          if (tagId) {
+              NSMutableDictionary *params = [NSMutableDictionary dictionaryWithCapacity:2];
+              [params setObject:@(page) forKey:@"page"];
+              [params setObject:@(count) forKey:@"count"];
+              [params setObject:[NSString stringWithFormat:@"%@",tagId] forKey:@"tid"];
+              [self loadRequestWithMethodName:@"favorites/by_tags.json"
+                                   httpMethod:@"GET"
+                                       params:params
+                                 postDataType:kWBRequestPostDataTypeNormal
+                             httpHeaderFields:nil
+                                completeBlock:completeBlock
+                                  failedBlock:faildBlock];
+
+          }
+      }
+        failedBlock:faildBlock];
+}
+
+- (void) getTag:(NSString *) tag Page:(NSInteger) page Count:(NSInteger) count completeBlock:(requestBlock) completeBlock failedBlock:(requestBlock) faildBlock {
+    NSMutableDictionary *params = [NSMutableDictionary dictionaryWithCapacity:2];
+    [params setObject:@(page) forKey:@"page"];
+    [params setObject:@(count) forKey:@"count"];
+    
+    [self loadRequestWithMethodName:@"favorites/tags.json"
+                         httpMethod:@"GET"
+                             params:nil
+                       postDataType:kWBRequestPostDataTypeNormal
+                   httpHeaderFields:nil
+                      completeBlock:completeBlock
+                        failedBlock:faildBlock];
 }
 
 #pragma mark - WBAuthorizeDelegate Methods

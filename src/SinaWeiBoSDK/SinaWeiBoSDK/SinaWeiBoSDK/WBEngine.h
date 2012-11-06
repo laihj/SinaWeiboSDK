@@ -141,4 +141,10 @@
 
 - (void) updateStatusFavoritesTag:(NSString *) StatusId andTag:(NSString *) tag completeBlock:(requestBlock) completeBlock failedBlock:(requestBlock) faildBlock;
 
+- (void) getFavoriteStatusPage:(NSInteger) page Count:(NSInteger) count completeBlock:(requestBlock) completeBlock failedBlock:(requestBlock) faildBlock;
+
+- (void) getFavoriteStatusWithTag:(NSString *) tag Page:(NSInteger) page Count:(NSInteger) count completeBlock:(requestBlock) completeBlock failedBlock:(requestBlock) faildBlock;
+
+- (void) getTag:(NSString *) tag Page:(NSInteger) page Count:(NSInteger) count completeBlock:(requestBlock) completeBlock failedBlock:(requestBlock) faildBlock;
+
 @end

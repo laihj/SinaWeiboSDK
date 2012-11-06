@@ -165,18 +165,26 @@
 {
     NSDictionary *detail = [timeLine objectAtIndex:indexPath.row];
     NSLog(@"%@",[detail objectForKey:@"id"]);
-    [engine addStatusToFavoritesWithStatusId:[detail objectForKey:@"id"]
-                                      andTag:@"test"
-                               completeBlock:^{
-                                   NSLog(@"添加成功");
-                                   NSString* logString = [[[NSString alloc] initWithData:engine.request.responseData
-                                                                                encoding:NSUTF8StringEncoding] autorelease];
-                                   NSLog(@"%@",logString);
-                               }
-                                 failedBlock:^{
-                                     NSLog(@"添加失败 ");
-                                 }];
-
+//    [engine addStatusToFavoritesWithStatusId:[detail objectForKey:@"id"]
+//                                      andTag:@"test"
+//                               completeBlock:^{
+//                                   NSString* logString = [[[NSString alloc] initWithData:engine.request.responseData
+//                                                                                encoding:NSUTF8StringEncoding] autorelease];
+//                                   NSLog(@"%@",logString);
+//                               }
+//                                 failedBlock:^{
+//                                     NSLog(@"添加失败 ");
+//                                 }];
+    [engine getFavoriteStatusWithTag:@"kk"
+                       Page:1 Count:20
+                    completeBlock:^{
+                        NSString* logString = [[[NSString alloc] initWithData:engine.request.responseData
+                                                                     encoding:NSUTF8StringEncoding] autorelease];
+                        NSLog(@"%@",logString);
+                    }
+                      failedBlock:^{
+                          NSLog(@"失败");
+                      }];
 }
 
 - (CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath
