@@ -124,9 +124,6 @@
                     completeBlock:(requestBlock) completeBlock
                       failedBlock:(requestBlock) faildBlock;
 
-// Send a Weibo, to which you can attach an image.
-- (void)sendWeiBoWithText:(NSString *)text image:(UIImage *)image;
-
 //发微博
 - (void)sendWeiBoWithText:(NSString *)text
                     image:(UIImage *)image

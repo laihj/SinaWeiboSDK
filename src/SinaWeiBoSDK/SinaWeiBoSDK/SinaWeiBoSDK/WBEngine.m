@@ -272,7 +272,9 @@
 }
 
 
-- (void) getCommentWithStatusId:(NSString *) StatusId completeBlock:(requestBlock) completeBlock failedBlock:(requestBlock) faildBlock {
+- (void) getCommentWithStatusId:(NSString *) StatusId
+                  completeBlock:(requestBlock) completeBlock
+                    failedBlock:(requestBlock) faildBlock {
     //responseData
     NSMutableDictionary *params = [NSMutableDictionary dictionaryWithCapacity:2];
     //NSString *sendText = [text URLEncodedString];
@@ -288,7 +290,10 @@
     
 }
 
-- (void)sendWeiBoWithText:(NSString *)text image:(UIImage *)image completeBlock:(requestBlock) completeBlock failedBlock:(requestBlock) faildBlock {
+- (void)sendWeiBoWithText:(NSString *)text
+                    image:(UIImage *)image
+            completeBlock:(requestBlock) completeBlock
+              failedBlock:(requestBlock) faildBlock {
         NSMutableDictionary *params = [NSMutableDictionary dictionaryWithCapacity:2];
     
     	[params setObject:(text ? text : @"") forKey:@"status"];
@@ -317,7 +322,10 @@
         }
 }
 
-- (void) commentWeiboWithText:(NSString *) text statusId:(NSString *) sid completeBlock:(requestBlock) completeBlock failedBlock:(requestBlock) faildBlock {
+- (void) commentWeiboWithText:(NSString *) text
+                     statusId:(NSString *) sid
+                completeBlock:(requestBlock) completeBlock
+                  failedBlock:(requestBlock) faildBlock {
     //comments/create.json
     
     NSMutableDictionary *params = [NSMutableDictionary dictionaryWithCapacity:2];
@@ -332,9 +340,12 @@
                         failedBlock:faildBlock];
 }
 
-- (void) commentWeiboWithText:(NSString *) text statusId:(NSString *) sid alsoRepost:(BOOL) repost completeBlock:(requestBlock) completeBlock failedBlock:(requestBlock) faildBlock {
-    //comments/create.json
-    
+- (void) commentWeiboWithText:(NSString *) text
+                     statusId:(NSString *) sid
+                   alsoRepost:(BOOL) repost
+                completeBlock:(requestBlock) completeBlock
+                  failedBlock:(requestBlock) faildBlock {
+
     NSMutableDictionary *params = [NSMutableDictionary dictionaryWithCapacity:3];
     [params setObject:(text ? text : @"") forKey:@"comment"];
     [params setObject:sid forKey:@"id"];
@@ -352,7 +363,10 @@
                         failedBlock:faildBlock];
 }
 
-- (void) repostWeiboWithText:(NSString *) text statusId:(NSString *) sid completeBlock:(requestBlock) completeBlock failedBlock:(requestBlock) faildBlock {
+- (void) repostWeiboWithText:(NSString *) text
+                    statusId:(NSString *) sid
+               completeBlock:(requestBlock) completeBlock
+                 failedBlock:(requestBlock) faildBlock {
     NSMutableDictionary *params = [NSMutableDictionary dictionaryWithCapacity:2];
     [params setObject:(text ? text : @"") forKey:@"status"];
     [params setObject:sid forKey:@"id"];
@@ -363,34 +377,6 @@
                    httpHeaderFields:nil
                       completeBlock:completeBlock
                         failedBlock:faildBlock];
-}
-
-- (void)sendWeiBoWithText:(NSString *)text image:(UIImage *)image
-{
-//    NSMutableDictionary *params = [NSMutableDictionary dictionaryWithCapacity:2];
-//
-//    //NSString *sendText = [text URLEncodedString];
-//    
-//	[params setObject:(text ? text : @"") forKey:@"status"];
-//	
-//    if (image)
-//    {
-//		[params setObject:image forKey:@"pic"];
-//
-//        [self loadRequestWithMethodName:@"statuses/upload.json"
-//                             httpMethod:@"POST"
-//                                 params:params
-//                           postDataType:kWBRequestPostDataTypeMultipart
-//                       httpHeaderFields:nil];
-//    }
-//    else
-//    {
-//        [self loadRequestWithMethodName:@"statuses/update.json"
-//                             httpMethod:@"POST"
-//                                 params:params
-//                           postDataType:kWBRequestPostDataTypeNormal
-//                       httpHeaderFields:nil];
-//    }
 }
 
 - (void) addStatusToFavoritesWithStatusId:(NSString *) StatusId
@@ -454,7 +440,11 @@
                         failedBlock:faildBlock];
 }
 
-- (void) getFavoriteStatusWithTag:(NSString *) tag Page:(NSInteger) page Count:(NSInteger) count completeBlock:(requestBlock) completeBlock failedBlock:(requestBlock) faildBlock {
+- (void) getFavoriteStatusWithTag:(NSString *) tag
+                             Page:(NSInteger) page
+                            Count:(NSInteger) count
+                    completeBlock:(requestBlock) completeBlock
+                      failedBlock:(requestBlock) faildBlock {
     [self getTag:tag Page:0 Count:20
       completeBlock:^{
           NSString* logString = [[[NSString alloc] initWithData:self.request.responseData
@@ -486,7 +476,11 @@
         failedBlock:faildBlock];
 }
 
-- (void) getTag:(NSString *) tag Page:(NSInteger) page Count:(NSInteger) count completeBlock:(requestBlock) completeBlock failedBlock:(requestBlock) faildBlock {
+- (void) getTag:(NSString *) tag
+           Page:(NSInteger) page
+          Count:(NSInteger) count
+  completeBlock:(requestBlock) completeBlock
+    failedBlock:(requestBlock) faildBlock {
     NSMutableDictionary *params = [NSMutableDictionary dictionaryWithCapacity:2];
     [params setObject:@(page) forKey:@"page"];
     [params setObject:@(count) forKey:@"count"];
