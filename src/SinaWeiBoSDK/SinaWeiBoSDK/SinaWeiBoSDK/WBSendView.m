@@ -77,7 +77,7 @@ static BOOL WBIsDeviceIPad()
         
         // add the panel view
         panelView = [[UIView alloc] initWithFrame:CGRectMake(16, 73, 288, 200)];
-        panelView.backgroundColor = [UIColor blueColor];
+        panelView.backgroundColor = COLOR_BLUE;
         panelView.layer.cornerRadius = 6;
         panelView.layer.masksToBounds = YES;
         [self addSubview:panelView];
@@ -120,7 +120,7 @@ static BOOL WBIsDeviceIPad()
         [contentTextView setText:text];
         contentTextView.layer.cornerRadius = 6;
         contentTextView.layer.masksToBounds = YES;
-        contentTextView.backgroundColor = [UIColor blackColor];
+        contentTextView.backgroundColor = COLOR_BLACK;
 		[contentTextView setFont:[UIFont systemFontOfSize:16]];
         contentTextView.textColor = [UIColor whiteColor];
  		[panelView addSubview:contentTextView];
@@ -216,7 +216,6 @@ static BOOL WBIsDeviceIPad()
         [panelView addSubview:_hud];
         _hud.labelText = @"正在发送...";
         [_hud show:YES];
-        //[hub hide:YES afterDelay:1];
         [_hud release];
     }
     if ([titleLabel.text isEqualToString:@"评论"]) {

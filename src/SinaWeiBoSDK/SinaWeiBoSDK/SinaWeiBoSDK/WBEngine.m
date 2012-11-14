@@ -257,7 +257,6 @@
     }
     
     [request disconnect];
-    
     self.request = [WBRequest requestWithAccessToken:accessToken
                                                  url:[NSString stringWithFormat:@"%@%@", kWBSDKAPIDomain, methodName]
                                           httpMethod:httpMethod
@@ -428,8 +427,8 @@
                  completeBlock:(requestBlock) completeBlock
                    failedBlock:(requestBlock) faildBlock {
     NSMutableDictionary *params = [NSMutableDictionary dictionaryWithCapacity:2];
-    [params setObject:@(page) forKey:@"page"];
-    [params setObject:@(count) forKey:@"count"];
+    [params setObject:[NSString stringWithFormat:@"%d",page] forKey:@"page"];
+    [params setObject:[NSString stringWithFormat:@"%d",count] forKey:@"count"];
     
     [self loadRequestWithMethodName:@"favorites.json"
                          httpMethod:@"GET"
@@ -445,23 +444,20 @@
                             Count:(NSInteger) count
                     completeBlock:(requestBlock) completeBlock
                       failedBlock:(requestBlock) faildBlock {
-    [self getTag:tag Page:0 Count:20
-      completeBlock:^{
-          NSString* logString = [[[NSString alloc] initWithData:self.request.responseData
-                                                       encoding:NSUTF8StringEncoding] autorelease];
+    [self getTagPage:1 completeBlock:^{
           NSString *tagId = nil;
-          NSDictionary *result = [logString JSONValue];
-          NSArray *tagArray = [result objectForKey:@"tags"];
-          for (NSDictionary *dict in tagArray) {
+
+          for (NSDictionary *dict in _tagArray) {
               if ([tag isEqualToString:[dict objectForKey:@"tag"]]) {
                   tagId = [dict objectForKey:@"id"];
                   break;
               }
           }
+        
           if (tagId) {
               NSMutableDictionary *params = [NSMutableDictionary dictionaryWithCapacity:2];
-              [params setObject:@(page) forKey:@"page"];
-              [params setObject:@(count) forKey:@"count"];
+              [params setObject:[NSString stringWithFormat:@"%d",page] forKey:@"page"];
+              [params setObject:[NSString stringWithFormat:@"%d",count] forKey:@"count"];
               [params setObject:[NSString stringWithFormat:@"%@",tagId] forKey:@"tid"];
               [self loadRequestWithMethodName:@"favorites/by_tags.json"
                                    httpMethod:@"GET"
@@ -482,16 +478,74 @@
   completeBlock:(requestBlock) completeBlock
     failedBlock:(requestBlock) faildBlock {
     NSMutableDictionary *params = [NSMutableDictionary dictionaryWithCapacity:2];
-    [params setObject:@(page) forKey:@"page"];
-    [params setObject:@(count) forKey:@"count"];
+    [params setObject:[NSString stringWithFormat:@"%d",page] forKey:@"page"];
+    [params setObject:[NSString stringWithFormat:@"%d",count] forKey:@"count"];
     
     [self loadRequestWithMethodName:@"favorites/tags.json"
                          httpMethod:@"GET"
-                             params:nil
+                             params:params
                        postDataType:kWBRequestPostDataTypeNormal
                    httpHeaderFields:nil
                       completeBlock:completeBlock
                         failedBlock:faildBlock];
+}
+
+- (void) getTagPage:(int) page completeBlock:(requestBlock) completeBlock
+                  failedBlock:(requestBlock) faildBlock {
+    [self getTag:@""
+            Page:page Count:10 completeBlock:^{
+                if (page == 1 || !_tagArray) {
+                    self.tagArray = [[NSMutableArray alloc] init];
+                }
+                
+                NSString* logString = [[[NSString alloc] initWithData:self.request.responseData
+                                                             encoding:NSUTF8StringEncoding] autorelease];
+                NSDictionary *result = [logString JSONValue];
+                NSArray *tagArrays = [result objectForKey:@"tags"];
+                for (NSDictionary *dict in tagArrays) {
+                    [_tagArray addObject:dict];
+                }
+                if ((page) * 10 >= [[result objectForKey:@"total_number"] intValue]) {
+                    completeBlock();
+                } else {
+                    [self getTagPage:page + 1 completeBlock:completeBlock failedBlock:faildBlock];
+                }
+            }
+     failedBlock:^{
+         faildBlock();
+     }
+     ];
+}
+
+- (void) getUserDataWithCompleteBlock:(requestBlock) completeBlock failedBlock:(requestBlock) faildBlock {
+    NSMutableDictionary *params = [NSMutableDictionary dictionaryWithCapacity:1];
+    //NSString *sendText = [text URLEncodedString];
+    
+	[params setObject:userID forKey:@"uid"];
+    [self loadRequestWithMethodName:@"users/show.json"
+                         httpMethod:@"GET"
+                             params:params
+                       postDataType:kWBRequestPostDataTypeNormal
+                   httpHeaderFields:nil
+                      completeBlock:completeBlock
+                        failedBlock:faildBlock];
+}
+
+- (void) getStateFavStatus:(NSString *) StatusId
+             completeBlock:(requestBlock) completeBlock
+               failedBlock:(requestBlock) faildBlock {
+    NSMutableDictionary *params = [NSMutableDictionary dictionaryWithCapacity:1];
+    [params setObject:[NSString stringWithFormat:@"%@",StatusId] forKey:@"id"];
+    
+	[params setObject:userID forKey:@"uid"];
+    [self loadRequestWithMethodName:@"favorites/show.json"
+                         httpMethod:@"GET"
+                             params:params
+                       postDataType:kWBRequestPostDataTypeNormal
+                   httpHeaderFields:nil
+                      completeBlock:completeBlock
+                        failedBlock:faildBlock];
+    
 }
 
 #pragma mark - WBAuthorizeDelegate Methods

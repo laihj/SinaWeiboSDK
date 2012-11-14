@@ -19,6 +19,7 @@
 
 #import "WBRequest.h"
 #import "WBAuthorizeWebView.h"
+#import "AuthViewController.h"
 
 @class WBAuthorize;
 

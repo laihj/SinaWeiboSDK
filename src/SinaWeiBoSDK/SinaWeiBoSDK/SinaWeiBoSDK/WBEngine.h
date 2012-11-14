@@ -75,6 +75,7 @@
     id<WBEngineDelegate> delegate;
     
     UIViewController *rootViewController;
+    
 }
 
 @property (nonatomic, retain) NSString *appKey;
@@ -88,6 +89,7 @@
 @property (nonatomic, retain) WBAuthorize *authorize;
 @property (nonatomic, assign) id<WBEngineDelegate> delegate;
 @property (nonatomic, assign) UIViewController *rootViewController;
+@property (nonatomic, retain) NSMutableArray *tagArray;
 
 // Initialize an instance with the AppKey and the AppSecret you have for your client.
 - (id)initWithAppKey:(NSString *)theAppKey appSecret:(NSString *)theAppSecret;
@@ -184,5 +186,16 @@
           Count:(NSInteger) count
   completeBlock:(requestBlock) completeBlock
     failedBlock:(requestBlock) faildBlock;
+
+//获取当前用户数据
+- (void) getUserDataWithCompleteBlock:(requestBlock) completeBlock
+                          failedBlock:(requestBlock) faildBlock;
+
+- (void) getStateFavStatus:(NSString *) StatusId
+                    completeBlock:(requestBlock) completeBlock
+                      failedBlock:(requestBlock) faildBlock;
+
+- (void) getTagPage:(int) page completeBlock:(requestBlock) completeBlock
+                  failedBlock:(requestBlock) faildBlock;
 
 @end

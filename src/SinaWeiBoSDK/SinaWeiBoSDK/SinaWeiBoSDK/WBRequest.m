@@ -85,11 +85,11 @@
     NSMutableArray *pairs = [NSMutableArray array];
 	for (NSString *key in [dict keyEnumerator])
 	{
+        
 		if (!([[dict valueForKey:key] isKindOfClass:[NSString class]]))
 		{
 			continue;
 		}
-		
 		[pairs addObject:[NSString stringWithFormat:@"%@=%@", key, [[dict objectForKey:key] URLEncodedString]]];
 	}
 	
@@ -276,11 +276,9 @@
     {
         return baseURL;
     }
-    
     NSURL *parsedURL = [NSURL URLWithString:baseURL];
 	NSString *queryPrefix = parsedURL.query ? @"&" : @"?";
 	NSString *query = [WBRequest stringFromDictionary:params];
-	
 	return [NSString stringWithFormat:@"%@%@%@", baseURL, queryPrefix, query];
 }
 

@@ -19,6 +19,7 @@
 #import "WBRequest.h"
 #import "WBSDKGlobal.h"
 
+
 #define kWBAuthorizeURL     @"https://api.weibo.com/oauth2/authorize"
 #define kWBAccessTokenURL   @"https://api.weibo.com/oauth2/access_token"
 
@@ -206,11 +207,16 @@
                                            params:params
                                        httpMethod:@"GET"];
     
-    WBAuthorizeWebView *webView = [[WBAuthorizeWebView alloc] init];
-    [webView setDelegate:self];
-    [webView loadRequestWithURL:[NSURL URLWithString:urlString]];
-    [webView show:YES];
-    [webView release];
+//    WBAuthorizeWebView *webView = [[WBAuthorizeWebView alloc] init];
+//    [webView setDelegate:self];
+//    [webView loadRequestWithURL:[NSURL URLWithString:urlString]];
+//    [webView show:YES];
+//    [webView release];
+    
+    AuthViewController *auth = [[AuthViewController alloc] init];
+    [auth setDelegate:self];
+    auth.url = [NSURL URLWithString:urlString];
+    [rootViewController presentModalViewController:auth animated:YES];
 }
 
 - (void)startAuthorizeUsingUserID:(NSString *)userID password:(NSString *)password
