@@ -198,4 +198,6 @@
 - (void) getTagPage:(int) page completeBlock:(requestBlock) completeBlock
                   failedBlock:(requestBlock) faildBlock;
 
+- (void) clearBlock;
+
 @end

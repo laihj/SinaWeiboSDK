@@ -271,6 +271,11 @@
 }
 
 
+- (void) clearBlock {
+    [request setCompleteBlock:nil];
+    [request setFailedBlock:nil];
+}
+
 - (void) getCommentWithStatusId:(NSString *) StatusId
                   completeBlock:(requestBlock) completeBlock
                     failedBlock:(requestBlock) faildBlock {
