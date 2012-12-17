@@ -19,6 +19,12 @@
 @synthesize webView;
 @synthesize url;
 
+- (void) dealloc {
+    [indicatorView release];
+    [webView release];
+    [url release];
+    [super dealloc];
+}
 
 - (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil
 {
@@ -74,8 +80,9 @@
 - (void) viewWillAppear:(BOOL)animated {
     [super viewWillAppear:animated];
     NSURLRequest *request =[NSURLRequest requestWithURL:url
-                                            cachePolicy:NSURLRequestReloadIgnoringLocalCacheData
+                                            cachePolicy:NSURLRequestReloadIgnoringLocalAndRemoteCacheData
                                         timeoutInterval:60.0];
+    //NSURLRequest *request = [NSURLRequest requestWithURL:url ];
     [webView loadRequest:request];
 }
 
@@ -111,6 +118,7 @@
 
 - (BOOL)webView:(UIWebView *)aWebView shouldStartLoadWithRequest:(NSURLRequest *)request navigationType:(UIWebViewNavigationType)navigationType
 {
+    //NRLog(@"%@",request.URL.absoluteString);
     NSRange range = [request.URL.absoluteString rangeOfString:@"code="];
     
     if (range.location != NSNotFound)

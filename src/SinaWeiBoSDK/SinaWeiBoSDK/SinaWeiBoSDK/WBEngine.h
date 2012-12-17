@@ -187,6 +187,9 @@
   completeBlock:(requestBlock) completeBlock
     failedBlock:(requestBlock) faildBlock;
 
+- (void) getTokenInfoBlock:(requestBlock) completeBlock
+               failedBlock:(requestBlock) faildBlock;
+
 //获取当前用户数据
 - (void) getUserDataWithCompleteBlock:(requestBlock) completeBlock
                           failedBlock:(requestBlock) faildBlock;
@@ -197,6 +200,8 @@
 
 - (void) getTagPage:(int) page completeBlock:(requestBlock) completeBlock
                   failedBlock:(requestBlock) faildBlock;
+- (void) loggingOutCompleteBlock:(requestBlock) completeBlock
+                     failedBlock:(requestBlock) faildBlock;
 
 - (void) clearBlock;
 

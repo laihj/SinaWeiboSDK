@@ -62,7 +62,7 @@
         self.appSecret = theAppSecret;
         
         isUserExclusive = NO;
-        
+        [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(readAuthorizeDataFromKeychain) name:@"WBAuthStatusChange" object:nil];
         [self readAuthorizeDataFromKeychain];
     }
     
@@ -71,6 +71,7 @@
 
 - (void)dealloc
 {
+    [[NSNotificationCenter defaultCenter] removeObserver:self];
     [appKey release], appKey = nil;
     [appSecret release], appSecret = nil;
     
@@ -105,6 +106,7 @@
     [SFHFKeychainUtils storeUsername:kWBKeychainUserID andPassword:userID forServiceName:serviceName updateExisting:YES error:nil];
 	[SFHFKeychainUtils storeUsername:kWBKeychainAccessToken andPassword:accessToken forServiceName:serviceName updateExisting:YES error:nil];
 	[SFHFKeychainUtils storeUsername:kWBKeychainExpireTime andPassword:[NSString stringWithFormat:@"%lf", expireTime] forServiceName:serviceName updateExisting:YES error:nil];
+    [[NSNotificationCenter defaultCenter] postNotificationName:@"WBAuthStatusChange" object:nil];
 }
 
 - (void)readAuthorizeDataFromKeychain
@@ -125,6 +127,7 @@
     [SFHFKeychainUtils deleteItemForUsername:kWBKeychainUserID andServiceName:serviceName error:nil];
 	[SFHFKeychainUtils deleteItemForUsername:kWBKeychainAccessToken andServiceName:serviceName error:nil];
 	[SFHFKeychainUtils deleteItemForUsername:kWBKeychainExpireTime andServiceName:serviceName error:nil];
+    [[NSNotificationCenter defaultCenter] postNotificationName:@"WBAuthStatusChange" object:nil];
 }
 
 #pragma mark - WBEngine Public Methods
@@ -199,22 +202,33 @@
 
 - (void)logOut
 {
-    [self deleteAuthorizeDataInKeychain];
+    [self loggingOutCompleteBlock:^{
+        
+        
+    }failedBlock:^{
+        
+    }];
     
-    if ([delegate respondsToSelector:@selector(engineDidLogOut:)])
-    {
-        [delegate engineDidLogOut:self];
-    }
+     [self deleteAuthorizeDataInKeychain];
+     
+     if ([delegate respondsToSelector:@selector(engineDidLogOut:)])
+     {
+         [delegate engineDidLogOut:self];
+     }
 }
 
 - (BOOL)isLoggedIn
 {
     //    return userID && accessToken && refreshToken;
-    return userID && accessToken && (expireTime > 0);
+    //return userID && accessToken && (expireTime > 0);
+    return userID && accessToken && ![self isAuthorizeExpired];
 }
 
 - (BOOL)isAuthorizeExpired
 {
+    if (expireTime == 0) {
+        return YES;
+    }
     if ([[NSDate date] timeIntervalSince1970] > expireTime)
     {
         // force to log out
@@ -264,10 +278,23 @@
                                         postDataType:postDataType
                                     httpHeaderFields:httpHeaderFields
                                             delegate:self];
+    
     [request setCompleteBlock:completeBlock];
     [request setFailedBlock:faildBlock];
 	
 	[request connect];
+    
+//    WBRequest *re = [WBRequest requestWithAccessToken:accessToken
+//                                                 url:[NSString stringWithFormat:@"%@%@", kWBSDKAPIDomain, methodName]
+//                                          httpMethod:httpMethod
+//                                              params:params
+//                                        postDataType:postDataType
+//                                    httpHeaderFields:httpHeaderFields
+//                                            delegate:self];
+//    [re setCompleteBlock:completeBlock];
+//    [re setFailedBlock:faildBlock];
+//	
+//	[re connect];
 }
 
 
@@ -552,6 +579,33 @@
                         failedBlock:faildBlock];
     
 }
+- (void) loggingOutCompleteBlock:(requestBlock) completeBlock
+                     failedBlock:(requestBlock) faildBlock {
+    [self loadRequestWithMethodName:@"account/end_session.json"
+                         httpMethod:@"GET"
+                             params:nil
+                       postDataType:kWBRequestPostDataTypeNormal
+                   httpHeaderFields:nil
+                      completeBlock:completeBlock
+                        failedBlock:faildBlock];
+    
+}
+
+//https://api.weibo.com/oauth2/get_token_info
+
+- (void) getTokenInfoBlock:(requestBlock) completeBlock
+                     failedBlock:(requestBlock) faildBlock {
+    NSMutableDictionary *params = [NSMutableDictionary dictionaryWithCapacity:1];
+    [params setObject:accessToken forKey:@"access_token"];
+    [self loadRequestWithMethodName:@"oauth2/get_token_info"
+                         httpMethod:@"POST"
+                             params:params
+                       postDataType:kWBRequestPostDataTypeNormal
+                   httpHeaderFields:nil
+                      completeBlock:completeBlock
+                        failedBlock:faildBlock];
+    
+}
 
 #pragma mark - WBAuthorizeDelegate Methods
 
@@ -560,7 +614,6 @@
     self.accessToken = theAccessToken;
     self.userID = theUserID;
     self.expireTime = [[NSDate date] timeIntervalSince1970] + seconds;
-    
     [self saveAuthorizeDataToKeychain];
     
     if ([delegate respondsToSelector:@selector(engineDidLogIn:)])

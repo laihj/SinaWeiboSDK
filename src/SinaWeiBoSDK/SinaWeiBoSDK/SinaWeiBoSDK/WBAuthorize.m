@@ -55,6 +55,7 @@
 
 - (void)dealloc
 {
+    NSLog(@"auth release");
     [appKey release], appKey = nil;
     [appSecret release], appSecret = nil;
     
@@ -111,6 +112,7 @@
             
             if (success && [delegate respondsToSelector:@selector(authorize:didSucceedWithAccessToken:userID:expiresIn:)])
             {
+                //[rootViewController dismissModalViewControllerAnimated:YES];
                 [delegate authorize:self didSucceedWithAccessToken:token userID:userID expiresIn:seconds];
             }
         }
@@ -207,16 +209,12 @@
                                            params:params
                                        httpMethod:@"GET"];
     
-//    WBAuthorizeWebView *webView = [[WBAuthorizeWebView alloc] init];
-//    [webView setDelegate:self];
-//    [webView loadRequestWithURL:[NSURL URLWithString:urlString]];
-//    [webView show:YES];
-//    [webView release];
-    
-    AuthViewController *auth = [[AuthViewController alloc] init];
+    AuthViewController *auth = [[AuthViewController alloc] init] ;
     [auth setDelegate:self];
     auth.url = [NSURL URLWithString:urlString];
+    //NRLog(@"%@",urlString);
     [rootViewController presentModalViewController:auth animated:YES];
+    //[auth release];
 }
 
 - (void)startAuthorizeUsingUserID:(NSString *)userID password:(NSString *)password
@@ -228,8 +226,8 @@
 
 - (void)authorizeWebView:(WBAuthorizeWebView *)webView didReceiveAuthorizeCode:(NSString *)code
 {
-    [webView hide:YES];
-    
+    //[webView hide:YES];
+    //[rootViewController dismissModalViewControllerAnimated:YES];
     // if not canceled
     if (![code isEqualToString:@"21330"])
     {
@@ -254,6 +252,7 @@
         
         if (success && [delegate respondsToSelector:@selector(authorize:didSucceedWithAccessToken:userID:expiresIn:)])
         {
+            
             [delegate authorize:self didSucceedWithAccessToken:token userID:userID expiresIn:seconds];
         }
     }
