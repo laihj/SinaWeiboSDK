@@ -102,19 +102,29 @@
 
 - (void)saveAuthorizeDataToKeychain
 {
-    NSString *serviceName = [[self urlSchemeString] stringByAppendingString:kWBKeychainServiceNameSuffix];
-    [SFHFKeychainUtils storeUsername:kWBKeychainUserID andPassword:userID forServiceName:serviceName updateExisting:YES error:nil];
-	[SFHFKeychainUtils storeUsername:kWBKeychainAccessToken andPassword:accessToken forServiceName:serviceName updateExisting:YES error:nil];
-	[SFHFKeychainUtils storeUsername:kWBKeychainExpireTime andPassword:[NSString stringWithFormat:@"%lf", expireTime] forServiceName:serviceName updateExisting:YES error:nil];
+//    NSString *serviceName = [[self urlSchemeString] stringByAppendingString:kWBKeychainServiceNameSuffix];
+//    [SFHFKeychainUtils storeUsername:kWBKeychainUserID andPassword:userID forServiceName:serviceName updateExisting:YES error:nil];
+//	[SFHFKeychainUtils storeUsername:kWBKeychainAccessToken andPassword:accessToken forServiceName:serviceName updateExisting:YES error:nil];
+//	[SFHFKeychainUtils storeUsername:kWBKeychainExpireTime andPassword:[NSString stringWithFormat:@"%lf", expireTime] forServiceName:serviceName updateExisting:YES error:nil];
+    
+    [[NSUserDefaults standardUserDefaults] setObject:userID forKey:kWBKeychainUserID];
+    [[NSUserDefaults standardUserDefaults] setObject:accessToken forKey:kWBKeychainAccessToken];
+    [[NSUserDefaults standardUserDefaults] setObject:[NSString stringWithFormat:@"%lf", expireTime] forKey:kWBKeychainExpireTime];
+    [[NSUserDefaults standardUserDefaults] synchronize];
+    
     [[NSNotificationCenter defaultCenter] postNotificationName:@"WBAuthStatusChange" object:nil];
 }
 
 - (void)readAuthorizeDataFromKeychain
 {
-    NSString *serviceName = [[self urlSchemeString] stringByAppendingString:kWBKeychainServiceNameSuffix];
-    self.userID = [SFHFKeychainUtils getPasswordForUsername:kWBKeychainUserID andServiceName:serviceName error:nil];
-    self.accessToken = [SFHFKeychainUtils getPasswordForUsername:kWBKeychainAccessToken andServiceName:serviceName error:nil];
-    self.expireTime = [[SFHFKeychainUtils getPasswordForUsername:kWBKeychainExpireTime andServiceName:serviceName error:nil] doubleValue];
+//    NSString *serviceName = [[self urlSchemeString] stringByAppendingString:kWBKeychainServiceNameSuffix];
+//    self.userID = [SFHFKeychainUtils getPasswordForUsername:kWBKeychainUserID andServiceName:serviceName error:nil];
+//    self.accessToken = [SFHFKeychainUtils getPasswordForUsername:kWBKeychainAccessToken andServiceName:serviceName error:nil];
+//    self.expireTime = [[SFHFKeychainUtils getPasswordForUsername:kWBKeychainExpireTime andServiceName:serviceName error:nil] doubleValue];
+    self.userID = [[NSUserDefaults standardUserDefaults] objectForKey:kWBKeychainUserID];
+    self.accessToken = [[NSUserDefaults standardUserDefaults] objectForKey:kWBKeychainAccessToken];
+    self.expireTime = [[[NSUserDefaults standardUserDefaults] objectForKey:kWBKeychainExpireTime] doubleValue];
+    
 }
 
 - (void)deleteAuthorizeDataInKeychain
@@ -123,11 +133,16 @@
     self.accessToken = nil;
     self.expireTime = 0;
     
-    NSString *serviceName = [[self urlSchemeString] stringByAppendingString:kWBKeychainServiceNameSuffix];
-    [SFHFKeychainUtils deleteItemForUsername:kWBKeychainUserID andServiceName:serviceName error:nil];
-	[SFHFKeychainUtils deleteItemForUsername:kWBKeychainAccessToken andServiceName:serviceName error:nil];
-	[SFHFKeychainUtils deleteItemForUsername:kWBKeychainExpireTime andServiceName:serviceName error:nil];
-    [[NSNotificationCenter defaultCenter] postNotificationName:@"WBAuthStatusChange" object:nil];
+    [[NSUserDefaults standardUserDefaults] setObject:nil forKey:kWBKeychainUserID];
+    [[NSUserDefaults standardUserDefaults] setObject:nil forKey:kWBKeychainAccessToken];
+    [[NSUserDefaults standardUserDefaults] setObject:nil forKey:kWBKeychainExpireTime];
+    [[NSUserDefaults standardUserDefaults] synchronize];
+    
+//    NSString *serviceName = [[self urlSchemeString] stringByAppendingString:kWBKeychainServiceNameSuffix];
+//    [SFHFKeychainUtils deleteItemForUsername:kWBKeychainUserID andServiceName:serviceName error:nil];
+//	[SFHFKeychainUtils deleteItemForUsername:kWBKeychainAccessToken andServiceName:serviceName error:nil];
+//	[SFHFKeychainUtils deleteItemForUsername:kWBKeychainExpireTime andServiceName:serviceName error:nil];
+//    [[NSNotificationCenter defaultCenter] postNotificationName:@"WBAuthStatusChange" object:nil];
 }
 
 #pragma mark - WBEngine Public Methods

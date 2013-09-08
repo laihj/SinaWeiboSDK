@@ -77,7 +77,7 @@ static BOOL WBIsDeviceIPad()
         
         // add the panel view
         panelView = [[UIView alloc] initWithFrame:CGRectMake(16, 73, 288, 200)];
-        panelView.backgroundColor = COLOR_BLUE;
+//        panelView.backgroundColor = COLOR_BLUE;
         panelView.layer.cornerRadius = 6;
         panelView.layer.masksToBounds = YES;
         [self addSubview:panelView];
@@ -120,7 +120,7 @@ static BOOL WBIsDeviceIPad()
         [contentTextView setText:text];
         contentTextView.layer.cornerRadius = 6;
         contentTextView.layer.masksToBounds = YES;
-        contentTextView.backgroundColor = COLOR_BLACK;
+
 		[contentTextView setFont:[UIFont systemFontOfSize:16]];
         contentTextView.textColor = [UIColor whiteColor];
  		[panelView addSubview:contentTextView];
@@ -136,7 +136,7 @@ static BOOL WBIsDeviceIPad()
 		[_alosreport setBackgroundColor:[UIColor clearColor]];
 		[_alosreport setTextColor:[UIColor darkGrayColor]];
 		[_alosreport setFont:[UIFont systemFontOfSize:16]];
-        _alosreport.text = @"同时转到发微博";
+        _alosreport.text = @"同时转发到微博";
 		[_alosreport setTextAlignment:UITextAlignmentCenter];
 		[panelView addSubview:_alosreport];
         
