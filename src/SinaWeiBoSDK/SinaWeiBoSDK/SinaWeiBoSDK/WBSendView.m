@@ -166,10 +166,10 @@ static BOOL WBIsDeviceIPad()
     UIButton *btn = (UIButton *) sender;
     if (btn.tag == 1) {
         _alosreportBtn.tag = 2;
-        [_alosreportBtn setImage:[UIImage imageNamed:@"cb_dark_on.png"] forState:UIControlStateNormal];
+        [_alosreportBtn setImage:[UIImage imageNamed:@"cb_glossy_on.png"] forState:UIControlStateNormal];
     } else {
         _alosreportBtn.tag = 1;
-        [_alosreportBtn setImage:[UIImage imageNamed:@"cb_dark_off.png"] forState:UIControlStateNormal];
+        [_alosreportBtn setImage:[UIImage imageNamed:@"cb_glossy_off.png"] forState:UIControlStateNormal];
     }
 }
 
