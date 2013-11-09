@@ -31,24 +31,22 @@
     self = [super initWithNibName:nibNameOrNil bundle:nibBundleOrNil];
     if (self) {
         // Custom initialization
-        UIToolbar *toolbar = [[UIToolbar alloc] initWithFrame:CGRectMake(0, 0, 320.0f, 44.0f)];
+        UIToolbar *toolbar = [[UIToolbar alloc] initWithFrame:CGRectMake(0, 0, 320.0f, 44.0f + STABAR)];
         [self.view addSubview:toolbar];
-        UILabel *titleLabel = [[UILabel alloc] initWithFrame:CGRectMake(60, 2, 200, 40)];
+        UILabel *titleLabel = [[UILabel alloc] initWithFrame:CGRectMake(60, 2 + STABAR, 200, 40)];
         titleLabel.text = @"新浪微博登录认证";
         titleLabel.backgroundColor = [UIColor clearColor];
         titleLabel.textAlignment = UITextAlignmentCenter;
-        titleLabel.textColor = [UIColor whiteColor];
+        titleLabel.textColor = [UIColor blackColor];
         titleLabel.font = [UIFont boldSystemFontOfSize:20];
         //    titleLabel.t
-        titleLabel.shadowColor = [UIColor grayColor];
-        titleLabel.shadowOffset = CGSizeMake(-1, -1);
         [self.view addSubview:titleLabel];
         [titleLabel release];
         
         UIBarButtonItem *bar = [[UIBarButtonItem alloc] initWithTitle:@"取消" style:UIBarButtonItemStyleBordered target:self action:@selector(Cancel)];
         [toolbar setItems:[NSArray arrayWithObject:bar]];
         
-        webView = [[UIWebView alloc] initWithFrame:CGRectMake(0, 44, 320, SCREEN_HEIGHT - 44)];
+        webView = [[UIWebView alloc] initWithFrame:CGRectMake(0, 44 + STABAR, 320, SCREEN_HEIGHT - 44)];
         webView.delegate = self;
         [self.view addSubview:webView];
         
