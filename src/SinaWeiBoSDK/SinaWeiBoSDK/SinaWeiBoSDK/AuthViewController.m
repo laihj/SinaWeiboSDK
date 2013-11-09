@@ -46,7 +46,7 @@
         UIBarButtonItem *bar = [[UIBarButtonItem alloc] initWithTitle:@"取消" style:UIBarButtonItemStyleBordered target:self action:@selector(Cancel)];
         [toolbar setItems:[NSArray arrayWithObject:bar]];
         
-        webView = [[UIWebView alloc] initWithFrame:CGRectMake(0, 44 + STABAR, 320, SCREEN_HEIGHT - 44)];
+        webView = [[UIWebView alloc] initWithFrame:CGRectMake(0, 44 + STABAR, 320, SCREEN_HEIGHT - 44 + STABAR)];
         webView.delegate = self;
         [self.view addSubview:webView];
         
