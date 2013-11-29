@@ -77,7 +77,6 @@ static BOOL WBIsDeviceIPad()
         
         // add the panel view
         panelView = [[UIView alloc] initWithFrame:CGRectMake(16, 73, 288, 200)];
-//        panelView.backgroundColor = COLOR_BLUE;
         panelView.layer.cornerRadius = 6;
         panelView.layer.masksToBounds = YES;
         [self addSubview:panelView];
@@ -137,7 +136,7 @@ static BOOL WBIsDeviceIPad()
 		[_alosreport setTextColor:[UIColor darkGrayColor]];
 		[_alosreport setFont:[UIFont systemFontOfSize:16]];
         _alosreport.text = @"同时转发到微博";
-		[_alosreport setTextAlignment:UITextAlignmentCenter];
+		[_alosreport setTextAlignment:NSTextAlignmentCenter];
 		[panelView addSubview:_alosreport];
         
         wordCountLabel = [[UILabel alloc] initWithFrame:CGRectMake(210, 190, 30, 30)];

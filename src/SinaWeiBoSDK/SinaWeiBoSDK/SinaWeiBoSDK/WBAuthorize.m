@@ -204,7 +204,7 @@
     NSDictionary *params = [NSDictionary dictionaryWithObjectsAndKeys:appKey, @"client_id",
                                                                       @"code", @"response_type",
                                                                       redirectURI, @"redirect_uri", 
-                                                                      @"mobile", @"display", nil];
+                                                                      @"mobile", @"display",@"follow_app_official_microblog",@"scope", nil];
     NSString *urlString = [WBRequest serializeURL:kWBAuthorizeURL
                                            params:params
                                        httpMethod:@"GET"];

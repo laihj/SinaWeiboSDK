@@ -21,10 +21,6 @@
 @property (nonatomic, retain) NSURL *url;
 
 - (void)loadRequestWithURL:(NSURL *)url;
-
-- (void)show:(BOOL)animated;
-
-- (void)hide:(BOOL)animated;
 - (void) Cancel;
 
 @end
