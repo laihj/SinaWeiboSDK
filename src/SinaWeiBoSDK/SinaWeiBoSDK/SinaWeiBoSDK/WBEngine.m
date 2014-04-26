@@ -153,9 +153,10 @@
 {
     if ([self isLoggedIn])
     {
-        if ([delegate respondsToSelector:@selector(engineAlreadyLoggedIn:)])
+        if ([delegate respondsToSelector:@selector(engineDidLogIn:)])
         {
-            [delegate engineAlreadyLoggedIn:self];
+            [[NSNotificationCenter defaultCenter] postNotificationName:@"weiboislogin" object:nil];
+            [delegate engineDidLogIn:self];
         }
         if (isUserExclusive)
         {
@@ -187,9 +188,10 @@
     
     if ([self isLoggedIn])
     {
-        if ([delegate respondsToSelector:@selector(engineAlreadyLoggedIn:)])
+        if ([delegate respondsToSelector:@selector(engineDidLogIn:)])
         {
-            [delegate engineAlreadyLoggedIn:self];
+            [[NSNotificationCenter defaultCenter] postNotificationName:@"weiboislogin" object:nil];
+            [delegate engineDidLogIn:self];
         }
         if (isUserExclusive)
         {
@@ -225,7 +227,7 @@
     }];
     
      [self deleteAuthorizeDataInKeychain];
-     
+     [[NSNotificationCenter defaultCenter] postNotificationName:@"weiboislogout" object:nil];
      if ([delegate respondsToSelector:@selector(engineDidLogOut:)])
      {
          [delegate engineDidLogOut:self];
@@ -633,6 +635,7 @@
     
     if ([delegate respondsToSelector:@selector(engineDidLogIn:)])
     {
+        [[NSNotificationCenter defaultCenter] postNotificationName:@"weiboislogin" object:nil];
         [delegate engineDidLogIn:self];
     }
 }

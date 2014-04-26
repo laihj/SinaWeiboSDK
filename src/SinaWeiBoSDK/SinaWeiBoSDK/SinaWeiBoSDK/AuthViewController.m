@@ -39,7 +39,7 @@
         UILabel *titleLabel = [[UILabel alloc] initWithFrame:CGRectMake(60, 22 , 200, 40)];
         titleLabel.text = @"新浪微博登录认证";
         titleLabel.backgroundColor = [UIColor clearColor];
-        titleLabel.textAlignment = UITextAlignmentCenter;
+        titleLabel.textAlignment = NSTextAlignmentCenter;
         titleLabel.textColor = COLOR_YELLOW;
         titleLabel.font = [UIFont boldSystemFontOfSize:20];
         //    titleLabel.t
@@ -63,7 +63,7 @@
 
 - (void) Cancel {
     [[NSNotificationCenter defaultCenter] postNotificationName:@"cancelWeibo" object:@"Sina"];
-    [self dismissModalViewControllerAnimated:YES];
+    [self dismissViewControllerAnimated:YES completion:nil];
 }
 
 - (void)viewDidLoad
@@ -128,7 +128,7 @@
         
         if ([delegate respondsToSelector:@selector(authorizeWebView:didReceiveAuthorizeCode:)])
         {
-            [self dismissModalViewControllerAnimated:YES];
+            [self dismissViewControllerAnimated:YES completion:nil];
             [delegate authorizeWebView:nil didReceiveAuthorizeCode:code];
         }
     }

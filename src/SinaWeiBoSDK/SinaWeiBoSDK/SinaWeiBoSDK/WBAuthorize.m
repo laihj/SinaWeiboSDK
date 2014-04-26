@@ -75,7 +75,7 @@
 
 - (void)dismissModalViewController
 {
-    [rootViewController dismissModalViewControllerAnimated:YES];
+    [rootViewController dismissViewControllerAnimated:YES completion:nil];
 }
 
 - (void)requestAccessTokenWithAuthorizeCode:(NSString *)code
@@ -212,9 +212,7 @@
     AuthViewController *auth = [[AuthViewController alloc] init] ;
     [auth setDelegate:self];
     auth.url = [NSURL URLWithString:urlString];
-    //NRLog(@"%@",urlString);
-    [rootViewController presentModalViewController:auth animated:YES];
-    //[auth release];
+    [rootViewController presentViewController:auth animated:YES completion:nil];
 }
 
 - (void)startAuthorizeUsingUserID:(NSString *)userID password:(NSString *)password
@@ -226,9 +224,6 @@
 
 - (void)authorizeWebView:(WBAuthorizeWebView *)webView didReceiveAuthorizeCode:(NSString *)code
 {
-    //[webView hide:YES];
-    //[rootViewController dismissModalViewControllerAnimated:YES];
-    // if not canceled
     if (![code isEqualToString:@"21330"])
     {
         [self requestAccessTokenWithAuthorizeCode:code];
